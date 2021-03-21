@@ -1,0 +1,36 @@
+@import '../../styles/colors';
+
+.MenuContainer {
+  display: flex;
+  align-items: center;
+}
+
+.MenuAvatar {
+  margin-right: 12px;
+}
+
+.MenuName {
+  font-weight: 700;
+  margin-right: 10px;
+  color: $black;
+  font-size: 10px;
+
+  @media screen and (min-width: 370px) {
+    margin-right: 12px;
+    font-size: 14px;
+  }
+}
+
+.MenuButton {
+  cursor: pointer;
+  padding: 8px 15px;
+  background-color: $red;
+  color: $white;
+  border: none;
+  border-radius: 2px;
+
+  &:focus,
+  &:hover {
+    background-color: $red-accent;
+  }
+}

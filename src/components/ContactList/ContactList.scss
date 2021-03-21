@@ -1,0 +1,34 @@
+@import '../../styles/colors';
+
+.ContactItem {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  padding-left: 45px;
+  border-radius: 2px;
+  background-color: $white;
+}
+
+.ContactItem-fade-enter {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.ContactItem-fade-enter-active {
+  transform: translateX(0);
+  transition: all 250ms linear;
+  opacity: 1;
+}
+
+.ContactItem-fade-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.ContactItem-fade-exit-active {
+  transform: translateX(-100%);
+  transition: all 250ms linear;
+  opacity: 0;
+}

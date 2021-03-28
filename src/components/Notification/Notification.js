@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import * as phoneBookActions from '../../redux/phoneBook/phoneBook-actions';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch  } from 'react-redux';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import './Notification.scss';
@@ -8,58 +8,63 @@ import selectors from '../../redux/phoneBook/phoneBook-selectors';
 import authSelectors from '../../redux/auth/auth-selectors';
 import authActions from '../../redux/auth/auth-actions';
 
-class Notification extends Component {
-    static propTypes = {
-        message: PropTypes.string,
-        errorPb: PropTypes.object,
-        errorAuth: PropTypes.string,
-        clearErrorPb: PropTypes.func,
-        clearErrorPAuth: PropTypes.func
-    };
+export default function Notification({message}) {
+    const dispatch = useDispatch();
+    const errorPb = useSelector(selectors.getError);
+    const errorAuth = useSelector(authSelectors.getError);
+    const clearErrorPb = () => dispatch(phoneBookActions.clearError());
+    const clearErrorAuth = () => dispatch(authActions.clearError());
    
-   
-    componentDidUpdate() {
-         if (this.props.errorAuth) {
+     
+    useEffect(() => {
             setTimeout(() => {
-                this.props.clearErrorAuth(this.state);
+                clearErrorAuth();
             }, 2500);
-             return;
-        }
-           if (this.props.errorPb) {
-            setTimeout(() => {
-                this.props.clearErrorPb(this.state);
-            }, 2500);
-             return;
-        }
-    }
+    }, [errorAuth]);
     
-    render() {
+
+     useEffect(() => {
+            setTimeout(() => {
+                clearErrorPb();
+            }, 2500);
+    }, [errorPb]);
+
+    // componentDidUpdate() {
+    //      if (errorAuth) {
+    //         setTimeout(() => {
+    //             clearErrorAuth(this.state);
+    //         }, 2500);
+    //          return;
+    //     }
+    //        if (errorPb) {
+    //         setTimeout(() => {
+    //             clearErrorPb(this.state);
+    //         }, 2500);
+    //          return;
+    //     }
+    // }
+    
         return (
             <CSSTransition
-            in={this.props.message}
+            in={message}
             timeout={250}
             classNames="Notification-fade"
             unmountOnExit>
             
         <div className="Overlay">
         <p className="Notification">
-            {this.props.message}
+            {message}
         </p>
         </div>
         </CSSTransition>
         );
     };
-}
 
-const mapStateToProps = (state) => ({
-    errorPb: selectors.getError(state),
-    errorAuth: authSelectors.getError(state)
-})
-
-const mapDispatchToProps = dispatch => ({
-    clearErrorPb: () => dispatch(phoneBookActions.clearError()),
-    clearErrorAuth: () => dispatch(authActions.clearError())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Notification);
+Notification.propTypes = {
+    message: PropTypes.string,
+    errorPb: PropTypes.string,
+    errorAuth: PropTypes.string,
+    clearErrorPb: PropTypes.func,
+    clearErrorPAuth: PropTypes.func
+};
 

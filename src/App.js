@@ -1,7 +1,7 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import AppBar from './components/AppBar';
 import Layout from './components/Layout/Layout';
 import authOperations from './redux/auth/auth-operations';
@@ -14,15 +14,15 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const PhoneBookPage = lazy(() => import('./pages/PhoneBookPage'));
 
-class App extends Component {
-      static propTypes = {
-        onGetCurrentUser: PropTypes.func,
-      };
+
+export default function App() {
+     
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(authOperations.getCurrentUser());
+    }, [dispatch]);
     
-    componentDidMount() {
-        this.props.onGetCurrentUser();
-    }
-    render() {
         return (
             <Layout>
                 <AppBar />
@@ -33,34 +33,35 @@ class App extends Component {
                         exact
                         path="/"
                         restricted
-                        redirectTo="/contacts"
-                        component={HomePage} />
+                        redirectTo="/contacts">
+                        <HomePage/>
+                    </PublicRoute>
                     <PublicRoute
                         path="/register"
                         restricted
-                        redirectTo="/contacts"
-                        component={RegisterPage} />
+                        redirectTo="/contacts">
+                        <RegisterPage/>
+                    </PublicRoute>
                     <PublicRoute
                         path="/login"
                         restricted
-                        redirectTo="/contacts"
-                        component={LoginPage} />
+                        redirectTo="/contacts">
+                        <LoginPage/> 
+                    </PublicRoute>
                     <PrivateRoute
                         path="/contacts"
-                        redirectTo="/login"
-                        component={PhoneBookPage}
-                    />
+                        redirectTo="/login">
+                        <PhoneBookPage/>
+                    </PrivateRoute>
                     </Switch>
                  </Suspense>
             </Layout>
         );
     };
+
+App.propTypes = {
+    onGetCurrentUser: PropTypes.func,
 };
 
-const mapDispatchToProps = {
-    onGetCurrentUser: authOperations.getCurrentUser
-}
-
-export default connect(null, mapDispatchToProps)(App);
 
 

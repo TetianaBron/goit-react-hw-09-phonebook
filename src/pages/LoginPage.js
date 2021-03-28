@@ -1,37 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import authOperations from '../redux/auth/auth-operations.js';
 import { CSSTransition } from 'react-transition-group';
 import authSelectors from '../redux/auth/auth-selectors';
 import Notification from '../components/Notification/Notification';
 import Spinner from '../components/Spinner/Spinner';
 
-class LoginPage extends Component {
-  static propTypes = {
-    error: PropTypes.string,
-    isLoadingAuth: PropTypes.bool,
-  };
+export default function LoginPage() {
+  const dispatch = useDispatch();
   
-  state = {
-    email: '',
-    password: '',
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const error = useSelector(authSelectors.getError);
+  const isLoadingAuth = useSelector(authSelectors.getLoading);
+
+  const handleChange = ({ target: { name, value } }) => {
+   switch (name) {
+      case 'email':
+        return setEmail(value);
+      case 'password':
+        return setPassword(value);
+      default:  console.warn(`Тип поля name - ${name} не обрабатывается!`);
+        return;
+    }
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-      this.props.onLogin(this.state);
-
-      this.setState({ name: '', email: '', password: '' });
+    dispatch(authOperations.logIn({ email, password }));
+    setEmail('');
+    setPassword('');    
     };
-
-  render() {
-    const { email, password } = this.state;
 
     return (
       <div>
@@ -47,14 +49,14 @@ class LoginPage extends Component {
 
         
         <Notification
-            message={this.props.error}
+            message={error}
           />
         
-        {this.props.isLoadingAuth && <Spinner />}
+        {isLoadingAuth && <Spinner />}
         
         <form
           className="Form"
-          onSubmit={this.handleSubmit}
+          onSubmit={handleSubmit}
           autoComplete="off">
           <label
             htmlFor="email"
@@ -65,7 +67,7 @@ class LoginPage extends Component {
               type="email"
               name="email"
               value={email}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
          
 
@@ -78,7 +80,7 @@ class LoginPage extends Component {
               type="password"
               name="password"
               value={password}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
           
 
@@ -89,16 +91,9 @@ class LoginPage extends Component {
       </div>
     );
   }
-}
 
-const mapStateToProps = (state) => ({
-  error: authSelectors.getError(state),
-  isLoadingAuth: authSelectors.getLoading(state),
-});
-
-const mapDispatchToProps = {
-  onLogin: authOperations.logIn,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+LoginPage.propTypes = {
+    error: PropTypes.string,
+    isLoadingAuth: PropTypes.bool,
+  };
 

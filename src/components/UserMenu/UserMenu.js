@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './UserMenu.scss';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import authSelectors from '../../redux/auth/auth-selectors';
 import authOperations from '../../redux/auth/auth-operations';
 import defaultAvatar from '../../images/default-avatar.png';
 import ButtonMenu from '../../components/button';
 
-const UserMenu = ({ avatar, name, onLogout }) => (
+export default function UserMenu() {
+  const dispatch = useDispatch();
+  const name = useSelector(authSelectors.getUsername);
+
+  const onLogOut = useCallback(() => {
+    dispatch(authOperations.logOut());
+  }, [dispatch]);
+
+  return (
   <div className="MenuContainer">
-    <img src={avatar} alt="" width="32" className="MenuAvatar" />
+    <img src={defaultAvatar} alt="" width="32" className="MenuAvatar" />
     <span className="MenuName">Welcome, {name}</span>
 {/* My button
     <button className="MenuButton" type="button" onClick={onLogout}>
@@ -16,18 +24,19 @@ const UserMenu = ({ avatar, name, onLogout }) => (
     </button> */}
 
     {/* Button from Material UI */}
-    <ButtonMenu onClick={onLogout} />
+    <ButtonMenu onClick={onLogOut} />
   </div>
-);
-
-const mapStateToProps = state => ({
-  name: authSelectors.getUsername(state),
-  avatar: defaultAvatar,
-});
-
-const mapDispatchToProps = {
-  onLogout: authOperations.logOut,
+  );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);
+// const mapStateToProps = state => ({
+//   name: authSelectors.getUsername(state),
+//   avatar: defaultAvatar,
+// });
+
+// const mapDispatchToProps = {
+//   onLogout: authOperations.logOut,
+// };
+
+//  connect(mapStateToProps, mapDispatchToProps)(UserMenu);
 

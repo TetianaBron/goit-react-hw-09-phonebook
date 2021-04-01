@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import * as phoneBookActions from '../../redux/phoneBook/phoneBook-actions';
 import { useSelector, useDispatch  } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -12,22 +12,22 @@ export default function Notification({message}) {
     const dispatch = useDispatch();
     const errorPb = useSelector(selectors.getError);
     const errorAuth = useSelector(authSelectors.getError);
-    const clearErrorPb = () => dispatch(phoneBookActions.clearError());
-    const clearErrorAuth = () => dispatch(authActions.clearError());
+    const clearErrorPb = useCallback(() => dispatch(phoneBookActions.clearError()), [dispatch]);
+    const clearErrorAuth = useCallback(() => dispatch(authActions.clearError()), [dispatch]);
    
      
     useEffect(() => {
             setTimeout(() => {
                 clearErrorAuth();
             }, 2500);
-    }, [errorAuth]);
+    }, [errorAuth, clearErrorAuth]);
     
 
      useEffect(() => {
             setTimeout(() => {
                 clearErrorPb();
             }, 2500);
-    }, [errorPb]);
+    }, [errorPb, clearErrorPb]);
 
     // componentDidUpdate() {
     //      if (errorAuth) {

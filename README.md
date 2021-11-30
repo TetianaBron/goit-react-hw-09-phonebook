@@ -6,7 +6,6 @@ them by keyword
 ## Technologies are used:
 * HTML5; 
 * SASS;
-* WEBPACK;
 * REACT;
 * REACT ROUTES;
 * AXIOUS;

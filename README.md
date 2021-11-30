@@ -1,5 +1,13 @@
-# goit-react-hw-09-phonebook
+# Phonebook
 
-Телефонная книга на хуках
+App where you can register, add/delete contacts and find
+them by keyword
 
-zaqzaqzaq@ukr.net
+## Technologies are used:
+* HTML5; 
+* SASS;
+* WEBPACK;
+* REACT;
+* REACT ROUTES;
+* AXIOUS;
+* REDUX

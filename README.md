@@ -8,5 +8,6 @@ them by keyword
 * SASS;
 * REACT;
 * REACT ROUTES;
+* React Transition Group;
 * AXIOUS;
 * REDUX
